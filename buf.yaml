@@ -1,0 +1,20 @@
+version: v1beta1
+name: buf.build/bequest/keyvalue
+build:
+  roots:
+    - proto
+lint:
+  use:
+    - DEFAULT
+  ignore_only:
+    PACKAGE_DIRECTORY_MATCH:
+      - answer.proto
+    PACKAGE_VERSION_SUFFIX:
+      - answer.proto
+    RPC_REQUEST_RESPONSE_UNIQUE:
+      - answer.proto
+    RPC_RESPONSE_STANDARD_NAME:
+      - answer.proto
+deps:
+  - buf.build/googleapis/googleapis
+  - buf.build/grpc-ecosystem/grpc-gateway

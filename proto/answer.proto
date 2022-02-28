@@ -1,0 +1,142 @@
+syntax="proto3";
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+package proto;
+
+option go_package = "bequest/proto";
+
+service KeyValueStore {
+  rpc Get(GetRequest) returns(GetResponse) {
+    option (google.api.http) = {
+      // Route to this method from POST requests to /api/v1/users
+      get: "/api/v1/kv/{key}"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      responses: {
+        key: "404"
+        value: {
+          description: "Key not found"
+          schema: {}
+        }
+      }
+    };
+  }
+
+  rpc Create(CreateRequest) returns(CreateResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/kv"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      responses: {
+        key: "400"
+        value: {
+          description: "Duplicate key found"
+          schema: {}
+        }
+      }
+    };
+  }
+
+  rpc Update(UpdateRequest) returns(UpdateResponse) {
+    option (google.api.http) = {
+      // Route to this method from POST requests to /api/v1/users
+      put: "/api/v1/kv"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      responses: {
+        key: "404"
+        value: {
+          description: "Key not found"
+          schema: {}
+        }
+      }
+    };
+  }
+
+
+  rpc Delete(DeleteRequest) returns (DeleteResponse) {
+    option (google.api.http) = {
+      // Route to this method from POST requests to /api/v1/users
+      delete: "/api/v1/kv/{key}"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      responses: {
+        key: "404"
+        value: {
+          description: "Key not found"
+          schema: {}
+        }
+      }
+    };
+  }
+  rpc GetHistory(GetHistoryRequest) returns (GetHistoryResponse) {
+    option (google.api.http) = {
+      // Route to this method from POST requests to /api/v1/users
+      get: "/api/v1/kv/{key}/history"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      responses: {
+        key: "404"
+        value: {
+          description: "Key not found"
+          schema: {}
+        }
+      }
+    };
+  }
+}
+
+message CreateRequest {
+  string key = 1;
+  string value = 2;
+}
+
+message CreateResponse {
+
+}
+
+message GetRequest {
+  string key = 1;
+}
+
+message GetResponse {
+  string key = 1;
+  string value = 2;
+}
+
+message UpdateRequest {
+  string key = 1;
+  string value = 2;
+}
+
+message UpdateResponse {
+
+}
+
+message DeleteRequest {
+  string key = 1;
+}
+
+message DeleteResponse {
+
+}
+
+message GetHistoryRequest {
+  string key = 1;
+}
+
+message GetHistoryResponse {
+  message Event {
+    string op = 1;
+    message Item {
+      string key = 1;
+      string value = 2;
+    }
+    Item item = 2;
+  }
+  repeated Event events = 1;
+}
